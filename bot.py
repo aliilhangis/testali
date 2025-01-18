@@ -1,7 +1,5 @@
 import random
-from telegram.ext import Application
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import Application, CommandHandler, CallbackContext
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # Oyun listesi
