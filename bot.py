@@ -1,61 +1,49 @@
 import random
-from telegram.ext import Application, CommandHandler, CallbackContext
-from apscheduler.schedulers.background import BackgroundScheduler
+import time
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 
-# Oyun listesi
+# Bot Token'ınızı buraya girin
+TOKEN = '7528327308:AAG5VxRb9QqArCLeP3gDxtJSE-m_jOV11Ho'
+
+# İsim listesi
 games = [
-    "Gates of Olympus",
-    "The Dog House",
-    "Sweet Bonanza",
-    "John Hunter and the Tomb of the Scarab Queen",
-    "Wolf Gold",
-    "Great Rhino Megaways",
-    "Big Bass Bonanza",
-    "Fruit Party",
-    "Release the Kraken",
-    "Madame Destiny Megaways",
-    "Buffalo King Megaways",
-    "Peking Luck",
-    "Chilli Heat",
-    "Dragon Tiger",
+    "Gates of Olympus", "The Dog House", "Sweet Bonanza", "John Hunter and the Tomb of the Scarab Queen", 
+    "Wolf Gold", "Great Rhino Megaways", "Big Bass Bonanza", "Fruit Party", "Release the Kraken", 
+    "Madame Destiny Megaways", "Buffalo King Megaways", "Peking Luck", "Chilli Heat", "Dragon Tiger", 
     "The Dog House Megaways"
 ]
 
-# Rastgele 5 oyun seçip oran atayan fonksiyon
-def generate_random_games_and_rates():
-    selected_games = random.sample(games, 5)  # Rastgele 5 oyun seç
-    result = [f"{game}: {random.uniform(85, 98):.2f}" for game in selected_games]  # Her birine 85-98 arası oran ata
-    return "\n".join(result)
+# 85 ile 98 arasında rastgele oran seçme fonksiyonu
+def random_percentage():
+    return random.uniform(85, 98)
 
-# /start komutu için yanıt
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text("Merhaba! Bu bot saat başı rastgele oyunlar ve oranlar paylaşır.")
-
-# Saatlik mesaj gönderme
-def send_hourly_message(context: CallbackContext) -> None:
-    chat_id = context.job.context
-    random_games_and_rates = generate_random_games_and_rates()
-    context.bot.send_message(chat_id=chat_id, text=f"Rastgele oyunlar ve oranlar:\n\n{random_games_and_rates}")
-
-# /başlat komutu ile zamanlayıcı başlatma
-def schedule_job(update: Update, context: CallbackContext) -> None:
-    chat_id = update.message.chat_id
-    context.job_queue.run_repeating(send_hourly_message, interval=3600, first=0, context=chat_id)
-    update.message.reply_text("Saatlik gönderim başladı!")
-
-def main():
-    # Telegram Bot Token
-    TOKEN = "7528327308:AAG5VxRb9QqArCLeP3gDxtJSE-m_jOV11Ho"
+# Haber gönderme fonksiyonu
+def send_news(update: Update, context: CallbackContext):
+    # Saat başı 5 rastgele oyun ve oran seçme
+    selected_games = random.sample(games, 5)
+    news_message = "Saat Başına Seçilen Oyunlar ve Oranlar:\n\n"
     
-    # Botun çalıştırılması
-    application = Application.builder().token(TOKEN).build()
-    dispatcher = application.dispatcher
+    for game in selected_games:
+        news_message += f"{game}: {random_percentage():.2f}%\n"
+    
+    update.message.reply_text(news_message)
 
-    # Komutları tanımlama
+# Start komutunun işlevi
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("Bot çalışıyor. /news komutunu kullanarak haber alabilirsiniz.")
+
+# Main fonksiyonu
+def main():
+    # Updater ve Dispatcher'ı başlatma
+    updater = Updater(TOKEN)
+    dispatcher = updater.dispatcher
+
+    # Komutları ekleyelim
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("başlat", schedule_job))
+    dispatcher.add_handler(CommandHandler("news", send_news))
 
-    # Zamanlayıcıyı başlat
+    # Botu çalıştırma
     updater.start_polling()
     updater.idle()
 
