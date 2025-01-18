@@ -46,7 +46,7 @@ def schedule_job(update: Update, context: CallbackContext) -> None:
 
 def main():
     # Telegram Bot Token
-    TOKEN = "TELEGRAM_BOT_TOKENINIZ"
+    TOKEN = "7528327308:AAG5VxRb9QqArCLeP3gDxtJSE-m_jOV11Ho"
     
     # Botun çalıştırılması
     updater = Updater(TOKEN)
