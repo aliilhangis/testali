@@ -49,8 +49,8 @@ def main():
     TOKEN = "7528327308:AAG5VxRb9QqArCLeP3gDxtJSE-m_jOV11Ho"
     
     # Botun çalıştırılması
-    updater = Updater(TOKEN)
-    dispatcher = updater.dispatcher
+    application = Application.builder().token(TOKEN).build()
+dispatcher = application.dispatcher
 
     # Komutları tanımlama
     dispatcher.add_handler(CommandHandler("start", start))
