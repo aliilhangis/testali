@@ -1,2 +1,4 @@
 python-telegram-bot==20.3
 apscheduler==3.10.4
+gunicorn==20.1.0
+
