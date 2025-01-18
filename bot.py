@@ -1,7 +1,8 @@
-import random
+import os
 from telegram.ext import Application, CommandHandler
 from telegram import Update
 from telegram.ext import ContextTypes
+import random
 
 # Bot Token
 TOKEN = '7528327308:AAG5VxRb9QqArCLeP3gDxtJSE-m_jOV11Ho'
@@ -14,36 +15,30 @@ games = [
     "The Dog House Megaways"
 ]
 
-# Rastgele yüzde seçme fonksiyonu
-def random_percentage():
-    return random.uniform(85, 98)
-
-# Start komutu işleyicisi
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bot çalışıyor. /news komutunu kullanarak haber alabilirsiniz.")
 
-# Haber gönderme fonksiyonu
 async def send_news(update: Update, context: ContextTypes.DEFAULT_TYPE):
     selected_games = random.sample(games, 5)
     news_message = "Saat Başına Seçilen Oyunlar ve Oranlar:\n\n"
     
     for game in selected_games:
-        news_message += f"{game}: {random_percentage():.2f}%\n"
+        percentage = random.uniform(85, 98)
+        news_message += f"{game}: {percentage:.2f}%\n"
     
     await update.message.reply_text(news_message)
 
-# Ana fonksiyon
-async def main():
-    # Uygulamayı başlat
-    application = Application.builder().token(TOKEN).build()
+def main():
+    # Bot uygulamasını oluştur
+    app = Application.builder().token(TOKEN).build()
     
     # Komut işleyicilerini ekle
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("news", send_news))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("news", send_news))
     
     # Botu başlat
-    await application.run_polling()
+    print("Bot başlatılıyor...")
+    app.run_polling(poll_interval=3.0, timeout=30)
 
 if __name__ == '__main__':
-    import asyncio
-    asyncio.run(main())
+    main()
