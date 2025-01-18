@@ -50,7 +50,7 @@ def main():
     
     # Botun çalıştırılması
     application = Application.builder().token(TOKEN).build()
-dispatcher = application.dispatcher
+    dispatcher = application.dispatcher
 
     # Komutları tanımlama
     dispatcher.add_handler(CommandHandler("start", start))
